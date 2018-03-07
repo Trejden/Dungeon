@@ -19,9 +19,13 @@
   - #### Typy pomieszczeń:
     - Startowy (pusty)
     - Normalny (z normalnymi przeciwnikami)
+       Przy wejsciu do pokuju automatycznie startuje walka (patrz walka) z losowo wygeerowanymi przeciwnikami. Po pokonani przeciwnikow pokoj zostaje pusty
     - Z Bossem (super silny przeciwnik)
+      - Przy wejsciu do pokuju automatycznie startuje walka z bosem(patrz walka) z losowo wygeerowanymi przeciwnikami. Po pokonani przeciwnikow pokoj zostaje pusty
     - Ze skarbem (ze skarbem)
     - Z kapliczką (z kapliczką umożliwiającą zakup i sprzedaż przedmiotów)
+      - W pomieszczeniu są generoawne obiekty zwiekszajace doświadczenie lub enerowane są przedmioty
+      - W pomieszczeniu jest generowany obiekt zwany kapliczka w ktorej gracz moze za zebrane doswiadczenie zakupic nowe przedmioty lub kupic zwiekszenie statystyki
 ### Wyświetlenie opisu i celu gry w okienku z jednym przyciskiem, które można zamknąć klikacjąc na przycisk myszą
 ### Oddanie kontroli graczowi
 - Poruszanie się po lochu za pomocą klawiatury lub myszki 
