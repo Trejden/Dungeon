@@ -26,9 +26,9 @@
 ### Oddanie kontroli graczowi
 - Poruszanie się po lochu za pomocą klawiatury lub myszki 
 - #### Ekwipunek (plecak z przedmiotami)
-- Okienko, w którym można przejrzeć zdobyte przedmioty, można je użyć, założyć, wyrzucić lub sprzedać/wymienić w kapliczce
-- Wsyzstkie powyższe akcje posiadają odpowiednie przyciski obok przedmiotów, które się naciska myszą
-- Ekwipunek można zamknąć stosownym przyciskiem
+   - Okienko, w którym można przejrzeć zdobyte przedmioty, można je użyć, założyć, wyrzucić lub sprzedać/wymienić w kapliczce
+   - Wsyzstkie powyższe akcje posiadają odpowiednie przyciski obok przedmiotów, które się naciska myszą
+   - Ekwipunek można zamknąć stosownym przyciskiem
 - #### Walka z przeciwnikami
   - Gracz na zmianę ze sztuczną inteligencją wykonują jeden z poniższych ruchów, kolejność wykonywania ruchów wyznaczana jest z szybkości jednostek (od najwyższej), celem danego ruchu może być dowolna jednostka na planszy walki
     - Atak - postać wykonuje cios swoją bronią na innej postaci, obrażenia jakie zadaje są zależne od statystyki siły oraz używanej broni
