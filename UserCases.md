@@ -49,5 +49,13 @@
   - Przegrana
     - Wyświetlenie informacji o porażce, jest to okienko z przyciskiem "Powrót do menu głównego", które można nacisnąc myszką
 ## wczytaj grę
+### Możliwość wyboru spośród wcześniej zapisanych stanów gry
+- Wybór jednego z zapisów powoduje bezpośredni powrót do momentu, w którym gra została zapisana
+- Możliwość powrotu do menu głównego za pomocą przycisku "cofnij"
+- Każdy zapis posiada widoczną informację na temat daty swojego powstania
 ## opcje
+- Możliwość zmiany klawiszy do wykonywania poszególnych akcji
+- Możliwość zmiany czułości myszy za pomocą suwaka 
 ## wyjście
+### Powoduje zamknięcie gry
+- Wszelkie niezapisane zmiany zostaną utracone
