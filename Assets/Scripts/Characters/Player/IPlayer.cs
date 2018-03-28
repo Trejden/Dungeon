@@ -1,16 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class IPlayer : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
+﻿
+public interface IPlayer  {
+	ICharacter[] Monsters {
+		get;
+		set;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	uint Money {
+		get;
+		set;
 	}
+
+	uint Score {
+		get;
+		set;
+	}
+
+	// TODO: List of skills (needs skill interface)
 }

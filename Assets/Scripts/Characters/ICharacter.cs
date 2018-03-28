@@ -1,16 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
+public interface ICharacter {
+	int Health {
+        get;
+        set;
+    }
 
-public class ICharacter : MonoBehaviour {
+    int MaxHealth {
+        get;
+        set;
+    }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    int Speed {
+        get;
+        set;
+    }
+
+    int Mana {
+        get;
+        set;
+    }
+
+    int Strength {
+        get;
+        set;
+    }
+
+    int Endurance {
+        get;
+        set;
+    }
+
+    // TODO: List of spells (needs spell interface)
+    // TODO: List of items (needs item interface)
+
+
 }

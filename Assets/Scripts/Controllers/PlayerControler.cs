@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControler : MonoBehaviour {
+	private bool moving;
+
+    private bool CanMove(float x, float y) {
+        // TODO: raytrace the path to look for obstacles (will be easy whenever test level appears)
+        return true;
+    }
+    public void Move(Direction dir) {
+        
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -13,4 +22,8 @@ public class PlayerControler : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	void FixedUpdate() {
+        
+    }
 }
