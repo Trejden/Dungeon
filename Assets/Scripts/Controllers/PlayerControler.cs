@@ -5,6 +5,13 @@ using UnityEngine;
 public class PlayerControler : MonoBehaviour {
 	private bool moving;
 
+    public static PlayerControler Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private bool CanMove(float x, float y) {
         // TODO: raytrace the path to look for obstacles (will be easy whenever test level appears)
         return true;
@@ -25,5 +32,10 @@ public class PlayerControler : MonoBehaviour {
 
 	void FixedUpdate() {
         
+    }
+
+    public void ResetPos()
+    {
+        GetComponent<Transform>().position = new Vector3(0, 0, 0);
     }
 }
