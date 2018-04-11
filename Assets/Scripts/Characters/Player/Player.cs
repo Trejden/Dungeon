@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, ICharacter, IPlayer {
-    public int Health
-    {
+public class Player : MonoBehaviour, ICharacter, IPlayer
+{
+    public int Health {
         get;
         set;
     }
 
-   public int MaxHealth {
+    public int MaxHealth {
         get;
         set;
     }
@@ -35,31 +35,34 @@ public class Player : MonoBehaviour, ICharacter, IPlayer {
     }
 
     public ICharacter[] Monsters {
-		get;
-		set;
-	}
+        get;
+        set;
+    }
 
-	public uint Money {
-		get;
-		set;
-	}
+    public uint Money {
+        get;
+        set;
+    }
 
-	public uint Score {
-		get;
-		set;
-	}
+    public uint Score {
+        get;
+        set;
+    }
 
-    void LevelUp() {
-        
+    void LevelUp()
+    {
+
     }
 
     // Use this for initialization
-    void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
 }
