@@ -6,11 +6,16 @@ using Assets.Scripts.Other;
 public class PlayerControler : MonoBehaviour {
 	public float speed = 3f;
 	private Vector2 target;
+	public static PlayerControler Instance;
 
 	public void ResetPos()
     {
         GetComponent<Transform>().position = new Vector3(0, 0, 0);
     }
+
+	void Awake() {
+		Instance = this;
+	}
 
 	// Use this for initialization
 	void Start () {
