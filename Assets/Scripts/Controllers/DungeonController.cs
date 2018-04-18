@@ -57,6 +57,12 @@ public class DungeonController : MonoBehaviour
 
     private DungeonGenerator Dungeon;
 
+    public static DungeonController Instance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
     {
         CreateDungeon();

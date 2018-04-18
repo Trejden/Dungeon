@@ -57,7 +57,7 @@ class DungeonGenerator
 
     #region Public Methods
 
-    public void Create()
+    public Room[,] Create()
     {
         int currentPosX = StartPosX;
         int currentPosY = StartPosY;
@@ -101,6 +101,8 @@ class DungeonGenerator
             currentNumberOfGeneratedRooms++;
         }
         GenerateSpecialRooms(allVisitedPositions, false);
+
+        return RoomGrid;
     }
 
     #endregion

@@ -3,24 +3,35 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public int DungeonPosX;
-    public int DungeonPosY;
-
-    public Room[,] RoomGrid;
-
-    public List<GameObject> WallsHorizontal;
-    public List<GameObject> WallsVertical;
-
-    public List<GameObject> DoorsHorizontal;
-    public List<GameObject> DoorsVertical;
-
-    public List<GameObject> Floors;
-
     public static GameController Instance;
 
-    private GameObject RoomObject;
+    [SerializeField]
+    private float WallOffset = 16.6f;
 
-    System.Random RandomGenerator;
+    [SerializeField]
+    private string Seed = "a";
+
+    [SerializeField]
+    private List<GameObject> WallsHorizontal;
+    [SerializeField]
+    private List<GameObject> WallsVertical;
+
+    [SerializeField]
+    private List<GameObject> DoorsHorizontal;
+    [SerializeField]
+    private List<GameObject> DoorsVertical;
+
+    [SerializeField]
+    private List<GameObject> Floors;
+
+    private GameObject CurrentRoom;
+
+    private int DungeonPosX;
+    private int DungeonPosY;
+
+    private Room[,] RoomGrid;
+
+    private System.Random RandomGenerator;
 
     private void Awake()
     {
@@ -29,20 +40,34 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        RandomGenerator = new System.Random("a".GetHashCode());
+        RandomGenerator = new System.Random(Seed.GetHashCode());
         CreateRoomGrid();
         DefineRoom(DungeonPosX, DungeonPosY);
         ShowRoom(DungeonPosX, DungeonPosY);
     }
 
-    void Update()
+    private void CreateRoomGrid()
     {
+        DungeonGenerator generator = new DungeonGenerator(10, 10, 50);
+        generator.RandomGenerator = RandomGenerator;
+        generator.ChanceToConnection = 20;
+        generator.LengthOfFirstPart = 25;
+        generator.NumberOfBosses = 1;
+        generator.NumberOfHidden = 1;
+        generator.NumberOfLocked = 1;
+        generator.NumberOfShops = 1;
+        generator.NumberOfTreasure = 1;
 
+        RoomGrid = generator.Create();
+
+        DungeonPosX = generator.StartPosX;
+        DungeonPosY = generator.StartPosY;
     }
 
     public void MoveToRoom(Direction direction)
     {
         UpdatePosition(ref DungeonPosX, ref DungeonPosY, direction);
+
         if (!RoomGrid[DungeonPosX, DungeonPosY].WasVisited)
             DefineRoom(DungeonPosX, DungeonPosY);
 
@@ -65,20 +90,6 @@ public class GameController : MonoBehaviour
                 posY++;
                 break;
         }
-    }
-    private void CreateRoomGrid()
-    {
-        DungeonGenerator generator = new DungeonGenerator(10, 10, 100);
-        generator.RandomGenerator = RandomGenerator;
-        generator.ChanceToConnection = 20;
-        generator.LengthOfFirstPart = 50;
-
-        generator.Create();
-
-        RoomGrid = generator.RoomGrid;
-
-        DungeonPosX = generator.StartPosX;
-        DungeonPosY = generator.StartPosY;
     }
 
     private void DefineRoom(int x, int y)
@@ -121,51 +132,67 @@ public class GameController : MonoBehaviour
 
         PlayerControler.Instance.ResetPos();
 
-        if (RoomObject != null)
-            Destroy(RoomObject);
+        if (CurrentRoom != null)
+            Destroy(CurrentRoom);
 
-        RoomObject = new GameObject("Room Object");
+        CurrentRoom = new GameObject("Room Object");
 
-        Instantiate(Floors[room.Floor.GetValueOrDefault()], new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(RoomObject.transform);
+        Instantiate(Floors[room.Floor.GetValueOrDefault()], new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(CurrentRoom.transform);
 
-        GameObject RightWall = Instantiate(WallsVertical[room.RightWall[0].GetValueOrDefault()], new Vector3(16.55f, 0, 0), Quaternion.identity);
-        RightWall.transform.SetParent(RoomObject.transform);
+        GameObject RightWall = Instantiate(WallsVertical[room.RightWall[0].GetValueOrDefault()], new Vector3(WallOffset, 0, 0), Quaternion.identity);
+        RightWall.transform.SetParent(CurrentRoom.transform);
 
         if (room.RightWall[1] != null)
         {
-            GameObject RightDoor = Instantiate(DoorsVertical[room.RightWall[1].GetValueOrDefault()], new Vector3(16.55f, 0, 0), Quaternion.identity);
+            GameObject RightDoor = Instantiate(DoorsVertical[room.RightWall[1].GetValueOrDefault()], new Vector3(WallOffset, 0, 0), Quaternion.identity);
             RightDoor.transform.SetParent(RightWall.transform);
             RightDoor.GetComponent<UseDoor>().direction = Direction.Right;
         }
+        else
+        {
+            RightWall.AddComponent<BoxCollider2D>();
+        }
 
-        GameObject LeftWall = Instantiate(WallsVertical[room.LeftWall[0].GetValueOrDefault()], new Vector3(-16.55f, 0, 0), Quaternion.identity);
-        LeftWall.transform.SetParent(RoomObject.transform);
+        GameObject LeftWall = Instantiate(WallsVertical[room.LeftWall[0].GetValueOrDefault()], new Vector3(-WallOffset, 0, 0), Quaternion.identity);
+        LeftWall.transform.SetParent(CurrentRoom.transform);
 
         if (room.LeftWall[1] != null)
         {
-            GameObject LeftDoor = Instantiate(DoorsVertical[room.LeftWall[1].GetValueOrDefault()], new Vector3(-16.55f, 0, 0), Quaternion.identity);
+            GameObject LeftDoor = Instantiate(DoorsVertical[room.LeftWall[1].GetValueOrDefault()], new Vector3(-WallOffset, 0, 0), Quaternion.identity);
             LeftDoor.transform.SetParent(LeftWall.transform);
             LeftDoor.GetComponent<UseDoor>().direction = Direction.Left;
         }
+        else
+        {
+            LeftWall.AddComponent<BoxCollider2D>();
+        }
 
-        GameObject UpWall = Instantiate(WallsHorizontal[room.UpWall[0].GetValueOrDefault()], new Vector3(0, 16.55f, 0), Quaternion.identity);
-        UpWall.transform.SetParent(RoomObject.transform);
+        GameObject UpWall = Instantiate(WallsHorizontal[room.UpWall[0].GetValueOrDefault()], new Vector3(0, WallOffset, 0), Quaternion.identity);
+        UpWall.transform.SetParent(CurrentRoom.transform);
 
         if (room.UpWall[1] != null)
         {
-            GameObject UpDoor = Instantiate(DoorsHorizontal[room.UpWall[1].GetValueOrDefault()], new Vector3(0, 16.55f, 0), Quaternion.identity);
+            GameObject UpDoor = Instantiate(DoorsHorizontal[room.UpWall[1].GetValueOrDefault()], new Vector3(0, WallOffset, 0), Quaternion.identity);
             UpDoor.transform.SetParent(UpWall.transform);
             UpDoor.GetComponent<UseDoor>().direction = Direction.Up;
         }
+        else
+        {
+            UpWall.AddComponent<BoxCollider2D>();
+        }
 
-        GameObject DownWall = Instantiate(WallsHorizontal[room.DownWall[0].GetValueOrDefault()], new Vector3(0, -16.55f, 0), Quaternion.identity);
-        DownWall.transform.SetParent(RoomObject.transform);
+        GameObject DownWall = Instantiate(WallsHorizontal[room.DownWall[0].GetValueOrDefault()], new Vector3(0, -WallOffset, 0), Quaternion.identity);
+        DownWall.transform.SetParent(CurrentRoom.transform);
 
         if (room.DownWall[1] != null)
         {
-            GameObject DownDoor = Instantiate(DoorsHorizontal[room.DownWall[1].GetValueOrDefault()], new Vector3(0, -16.55f, 0), Quaternion.identity);
+            GameObject DownDoor = Instantiate(DoorsHorizontal[room.DownWall[1].GetValueOrDefault()], new Vector3(0, -WallOffset, 0), Quaternion.identity);
             DownDoor.transform.SetParent(DownWall.transform);
             DownDoor.GetComponent<UseDoor>().direction = Direction.Down;
+        }
+        else
+        {
+            DownWall.AddComponent<BoxCollider2D>();
         }
     }
 }

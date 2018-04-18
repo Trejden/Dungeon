@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.Scripts.Other;
 
 public class PlayerControler : MonoBehaviour {
 	public float speed = 3f;
@@ -39,17 +38,17 @@ public class PlayerControler : MonoBehaviour {
 		var pos = transform.position;
 		if (col.transform.position.x == 0f) {
 			if (pos.y > 0f) {
-				pos.y = col.transform.position.y - 0.5f;
+				pos.y = col.transform.position.y - 1.8f;
 			} else {
-				pos.y = col.transform.position.y + 0.5f;
+				pos.y = col.transform.position.y + 1.8f;
 			}
 			target.y = pos.y;
 		}
 		if (col.transform.position.y == 0f) {
 			if (pos.x > 0f) {
-				pos.x = col.transform.position.x - 0.4f;
+				pos.x = col.transform.position.x - 1.6f;
 			} else {
-				pos.x = col.transform.position.x + 0.4f;
+				pos.x = col.transform.position.x + 1.6f;
 			}
 			target.x = pos.x;
 		}
