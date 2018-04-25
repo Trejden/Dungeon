@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControler : MonoBehaviour {
-	public float speed = 3f;
-	private Vector2 target;
+	public float MovementSpeed = 3f;
+	private Vector2 Target;
 	public static PlayerControler Instance;
+    public bool CanUseDoor { get { return !GameController.Instance.IsNextRoomMoving; } }
 
 	public void ResetPos()
     {
@@ -18,15 +19,15 @@ public class PlayerControler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		target = transform.position;
+		Target = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetMouseButton(0)) {
-			target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		if (Input.GetMouseButton(0) && !GameController.Instance.IsNextRoomMoving) {
+			Target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		}
-		transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+		transform.position = Vector2.MoveTowards(transform.position, Target, MovementSpeed * Time.deltaTime);
 	}
 
 	void FixedUpdate() {
@@ -42,7 +43,7 @@ public class PlayerControler : MonoBehaviour {
 			} else {
 				pos.y = col.transform.position.y + 1.8f;
 			}
-			target.y = pos.y;
+			Target.y = pos.y;
 		}
 		if (col.transform.position.y == 0f) {
 			if (pos.x > 0f) {
@@ -50,7 +51,7 @@ public class PlayerControler : MonoBehaviour {
 			} else {
 				pos.x = col.transform.position.x + 1.6f;
 			}
-			target.x = pos.x;
+			Target.x = pos.x;
 		}
 		transform.position = pos;
 	}
