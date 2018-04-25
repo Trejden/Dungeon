@@ -6,7 +6,11 @@ public class GameController : MonoBehaviour
     public static GameController Instance;
 
     [SerializeField]
+    private float RoomMovementSpeed = 3f;
+    [SerializeField]
     private float WallOffset = 16.6f;
+    [SerializeField]
+    private float PlayerOffset = 0.95f;
 
     [SerializeField]
     private string Seed = "a";
@@ -25,6 +29,7 @@ public class GameController : MonoBehaviour
     private List<GameObject> Floors;
 
     private GameObject CurrentRoom;
+    private GameObject NextRoom;
 
     private int DungeonPosX;
     private int DungeonPosY;
@@ -32,6 +37,12 @@ public class GameController : MonoBehaviour
     private Room[,] RoomGrid;
 
     private System.Random RandomGenerator;
+
+    private Direction SpawnedRoomDirection = Direction.NoDirection;
+
+    public bool IsNextRoomMoving = false;
+
+    private Vector3 PlayerDestination; 
 
     private void Awake()
     {
@@ -44,6 +55,22 @@ public class GameController : MonoBehaviour
         CreateRoomGrid();
         DefineRoom(DungeonPosX, DungeonPosY);
         ShowRoom(DungeonPosX, DungeonPosY);
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsNextRoomMoving)
+        {
+            CurrentRoom.transform.position = Vector3.MoveTowards(CurrentRoom.transform.position, DirectionToNegativeVectorConverter(SpawnedRoomDirection, WallOffset * 2), RoomMovementSpeed * Time.deltaTime);
+            NextRoom.transform.position = Vector3.MoveTowards(NextRoom.transform.position, Vector3.zero, RoomMovementSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(NextRoom.transform.position, Vector3.zero) == 0)
+            {
+                Destroy(CurrentRoom);
+                CurrentRoom = NextRoom;
+                IsNextRoomMoving = false;
+            }
+        }
     }
 
     private void CreateRoomGrid()
@@ -71,7 +98,7 @@ public class GameController : MonoBehaviour
         if (!RoomGrid[DungeonPosX, DungeonPosY].WasVisited)
             DefineRoom(DungeonPosX, DungeonPosY);
 
-        ShowRoom(DungeonPosX, DungeonPosY);
+        ShowRoom(DungeonPosX, DungeonPosY, direction);
     }
     private void UpdatePosition(ref int posX, ref int posY, Direction direction)
     {
@@ -89,6 +116,55 @@ public class GameController : MonoBehaviour
             case Direction.Down:
                 posY++;
                 break;
+        }
+    }
+    private Vector3 StartPlayerPosition(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Left:
+                return new Vector3(-PlayerOffset, 0, 0);
+            case Direction.Up:
+                return new Vector3(0, PlayerOffset, 0);
+            case Direction.Right:
+                return new Vector3(PlayerOffset, 0, 0);
+            case Direction.Down:
+                return new Vector3(0, -PlayerOffset, 0);
+            default:
+                return Vector3.zero;
+        }
+    }
+
+    private Vector3 DirectionToNegativeVectorConverter(Direction direction, float vectorLength)
+    {
+        switch (direction)
+        {
+            case Direction.Left:
+                return new Vector3(vectorLength, 0, 0);
+            case Direction.Up:
+                return new Vector3(0, -vectorLength, 0);
+            case Direction.Right:
+                return new Vector3(-vectorLength, 0, 0);
+            case Direction.Down:
+                return new Vector3(0, vectorLength, 0);
+            default:
+                return Vector3.zero;
+        }
+    }
+    private Vector3 DirectionToVectorConverter(Direction direction, float vectorLength)
+    {
+        switch (direction)
+        {
+            case Direction.Left:
+                return new Vector3(-vectorLength, 0, 0);
+            case Direction.Up:
+                return new Vector3(0, vectorLength, 0);
+            case Direction.Right:
+                return new Vector3(vectorLength, 0, 0);
+            case Direction.Down:
+                return new Vector3(0, -vectorLength, 0);
+            default:
+                return Vector3.zero;
         }
     }
 
@@ -126,21 +202,17 @@ public class GameController : MonoBehaviour
         RoomGrid[x, y] = newRoom;
     }
 
-    private void ShowRoom(int x, int y)
+    private void ShowRoom(int x, int y, Direction direction = Direction.NoDirection)
     {
         Room room = RoomGrid[x, y];
+        GameObject roomObj;
 
-        PlayerControler.Instance.ResetPos();
+        roomObj = new GameObject("Room Object");
 
-        if (CurrentRoom != null)
-            Destroy(CurrentRoom);
-
-        CurrentRoom = new GameObject("Room Object");
-
-        Instantiate(Floors[room.Floor.GetValueOrDefault()], new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(CurrentRoom.transform);
+        Instantiate(Floors[room.Floor.GetValueOrDefault()], new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(roomObj.transform);
 
         GameObject RightWall = Instantiate(WallsVertical[room.RightWall[0].GetValueOrDefault()], new Vector3(WallOffset, 0, 0), Quaternion.identity);
-        RightWall.transform.SetParent(CurrentRoom.transform);
+        RightWall.transform.SetParent(roomObj.transform);
 
         if (room.RightWall[1] != null)
         {
@@ -154,7 +226,7 @@ public class GameController : MonoBehaviour
         }
 
         GameObject LeftWall = Instantiate(WallsVertical[room.LeftWall[0].GetValueOrDefault()], new Vector3(-WallOffset, 0, 0), Quaternion.identity);
-        LeftWall.transform.SetParent(CurrentRoom.transform);
+        LeftWall.transform.SetParent(roomObj.transform);
 
         if (room.LeftWall[1] != null)
         {
@@ -168,7 +240,7 @@ public class GameController : MonoBehaviour
         }
 
         GameObject UpWall = Instantiate(WallsHorizontal[room.UpWall[0].GetValueOrDefault()], new Vector3(0, WallOffset, 0), Quaternion.identity);
-        UpWall.transform.SetParent(CurrentRoom.transform);
+        UpWall.transform.SetParent(roomObj.transform);
 
         if (room.UpWall[1] != null)
         {
@@ -182,7 +254,7 @@ public class GameController : MonoBehaviour
         }
 
         GameObject DownWall = Instantiate(WallsHorizontal[room.DownWall[0].GetValueOrDefault()], new Vector3(0, -WallOffset, 0), Quaternion.identity);
-        DownWall.transform.SetParent(CurrentRoom.transform);
+        DownWall.transform.SetParent(roomObj.transform);
 
         if (room.DownWall[1] != null)
         {
@@ -194,5 +266,18 @@ public class GameController : MonoBehaviour
         {
             DownWall.AddComponent<BoxCollider2D>();
         }
+
+        if (direction == Direction.NoDirection)
+        {
+            CurrentRoom = Instantiate(roomObj, Vector3.zero, Quaternion.identity);
+        }
+        else
+        {
+            NextRoom = Instantiate(roomObj, DirectionToVectorConverter(direction, WallOffset * 2), Quaternion.identity);
+            IsNextRoomMoving = true;
+            SpawnedRoomDirection = direction;
+        }
+        if (roomObj)
+            Destroy(roomObj);
     }
 }

@@ -6,7 +6,7 @@
 
     public override void Interract()
     {
-        if (!WasUsed)
+        if (!WasUsed && PlayerControler.Instance.CanUseDoor)
             Use();
     }
 

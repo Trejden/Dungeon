@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e003e65710a47c446b1ad36364af8618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  MovementSpeed: 10
 --- !u!1 &1338395218
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +401,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b03b019d68daab147aa63e47ec632337, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RoomMovementSpeed: 3
   WallOffset: 16.6
+  PlayerOffset: 0.95
   Seed: a
   WallsHorizontal:
   - {fileID: 1104469905254458, guid: b24cb4158d5743c4abc3f91abf3ace36, type: 2}
@@ -413,6 +415,7 @@ MonoBehaviour:
   - {fileID: 1883506721933144, guid: 26bfb175f6a6596499b3ba124019c3ae, type: 2}
   Floors:
   - {fileID: 1011590021880566, guid: 00c85d62577f83046a9c8703e646c4f8, type: 2}
+  MoveToNextRoom: 0
 --- !u!4 &1338395221
 Transform:
   m_ObjectHideFlags: 0
