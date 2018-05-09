@@ -10,6 +10,7 @@ public class Orc : MonoBehaviour, ICharacter, IEnemy
     private int mana;
     private int strength;
     private int endurance;
+    private bool isDead;
 
     public int Health {
         get {return health;}
@@ -35,6 +36,21 @@ public class Orc : MonoBehaviour, ICharacter, IEnemy
         get {return endurance;}
     }
 
+    public bool IsDead {
+        get {return isDead;}
+    }
+
+    public bool IsPlayer {
+        get {return false;}
+    }
+    
+    public void Damage(int val) {
+        health -= val;
+        if (health <= 0) {
+            isDead = true;
+        }
+    }
+
     public Orc() {
         strength = Random.Range(15, 30);
         endurance = Random.Range(10, 25);
@@ -42,5 +58,6 @@ public class Orc : MonoBehaviour, ICharacter, IEnemy
         mana = 0;
         maxHealth = (int)(endurance * 1.5 + strength * 0.5);
         health = maxHealth;
+        isDead = false;
     }
 }

@@ -10,6 +10,7 @@ public class Dwarf : MonoBehaviour, ICharacter, IEnemy
     private int mana;
     private int strength;
     private int endurance;
+    private bool isDead;
 
     public int Health {
         get {return health;}
@@ -35,6 +36,21 @@ public class Dwarf : MonoBehaviour, ICharacter, IEnemy
         get {return endurance;}
     }
 
+    public bool IsDead {
+        get {return isDead;}
+    }
+
+    public bool IsPlayer{
+        get {return false;}
+    }
+
+    public void Damage(int val) {
+        health -= val;
+        if (health <= 0) {
+            isDead = true;
+        }
+    }
+
     public Dwarf() {
         strength = Random.Range(15, 25);
         endurance = Random.Range(10, 20);
@@ -42,5 +58,6 @@ public class Dwarf : MonoBehaviour, ICharacter, IEnemy
         mana = Random.Range(0, 10);
         maxHealth = (int)(endurance * 1.5 + strength * 0.5);
         health = maxHealth;
+        isDead = false;
     }
 }

@@ -34,6 +34,15 @@ public class Player : MonoBehaviour, ICharacter, IPlayer
         set;
     }
 
+    public bool IsDead {
+        get;
+        set;
+    }
+
+    public bool IsPlayer {
+        get {return true;}
+    }
+
     public ICharacter[] Monsters {
         get;
         set;
@@ -47,6 +56,13 @@ public class Player : MonoBehaviour, ICharacter, IPlayer
     public uint Score {
         get;
         set;
+    }
+
+    public void Damage(int val) {
+        Health -= val;
+        if (Health <= 0) {
+            IsDead = true;
+        }
     }
 
     void LevelUp()
