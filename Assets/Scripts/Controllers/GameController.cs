@@ -41,8 +41,9 @@ public class GameController : MonoBehaviour
     private Direction SpawnedRoomDirection = Direction.NoDirection;
 
     public bool IsNextRoomMoving = false;
+    public bool IsPlayerInNewRoom = false;
 
-    private Vector3 PlayerDestination; 
+    private Vector3 PlayerDestination;
 
     private void Awake()
     {
@@ -61,8 +62,21 @@ public class GameController : MonoBehaviour
     {
         if (IsNextRoomMoving)
         {
-            CurrentRoom.transform.position = Vector3.MoveTowards(CurrentRoom.transform.position, DirectionToNegativeVectorConverter(SpawnedRoomDirection, WallOffset * 2), RoomMovementSpeed * Time.deltaTime);
-            NextRoom.transform.position = Vector3.MoveTowards(NextRoom.transform.position, Vector3.zero, RoomMovementSpeed * Time.deltaTime);
+            if (!IsPlayerInNewRoom)
+            {
+                PlayerControler.Instance.transform.position = Vector3.MoveTowards(PlayerControler.Instance.transform.position, PlayerDestination, PlayerControler.Instance.MovementSpeed * Time.deltaTime);
+                if (PlayerControler.Instance.transform.position == PlayerDestination)
+                {
+                    IsPlayerInNewRoom = true;
+                }
+            }
+
+            if (IsPlayerInNewRoom)
+            {
+                CurrentRoom.transform.position = Vector3.MoveTowards(CurrentRoom.transform.position, DirectionToNegativeVectorConverter(SpawnedRoomDirection, WallOffset * 2), RoomMovementSpeed * Time.deltaTime);
+                NextRoom.transform.position = Vector3.MoveTowards(NextRoom.transform.position, Vector3.zero, RoomMovementSpeed * Time.deltaTime);
+                //PlayerControler.Instance.transform.position = Vector3.MoveTowards(PlayerControler.Instance.transform.position, DirectionToNegativeVectorConverter(SpawnedRoomDirection, WallOffset * 2), PlayerControler.Instance.MovementSpeed * Time.deltaTime);
+            }
 
             if (Vector3.Distance(NextRoom.transform.position, Vector3.zero) == 0)
             {
@@ -275,6 +289,7 @@ public class GameController : MonoBehaviour
         {
             NextRoom = Instantiate(roomObj, DirectionToVectorConverter(direction, WallOffset * 2), Quaternion.identity);
             IsNextRoomMoving = true;
+            PlayerDestination = DirectionToVectorConverter(direction, PlayerOffset) + PlayerControler.Instance.transform.position;
             SpawnedRoomDirection = direction;
         }
         if (roomObj)
