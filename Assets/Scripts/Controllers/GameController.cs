@@ -113,6 +113,7 @@ public class GameController : MonoBehaviour
             DefineRoom(DungeonPosX, DungeonPosY);
 
         ShowRoom(DungeonPosX, DungeonPosY, direction);
+        BattleController.Instance.StartBattle(GetCurrentRoomType);
     }
     private void UpdatePosition(ref int posX, ref int posY, Direction direction)
     {
@@ -294,5 +295,11 @@ public class GameController : MonoBehaviour
         }
         if (roomObj)
             Destroy(roomObj);
+    }
+
+    public RoomType GetCurrentRoomType {
+        get {
+            return RoomGrid[DungeonPosX, DungeonPosY].Type;
+        }
     }
 }
